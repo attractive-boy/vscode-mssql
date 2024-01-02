@@ -36,6 +36,8 @@ const template = `
         <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyWithHeaders']}}</span></li>
     <li id="copyAllHeaders" (click)="handleContextActionClick('copyAllHeaders')" [class.disabled]="isDisabled"> {{Constants.copyAllHeadersLabel}}
         <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyAllHeaders']}}</span></li>
+		<li id="copyToInsertSql" (click)="handleContextActionClick('copyToInsertSql')"> copy To Insert Sql
+        <span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
 </ul>
 `;
 

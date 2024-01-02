@@ -19,6 +19,7 @@ import { MessagesContextMenu } from './messagescontextmenu.component';
 
 import * as Constants from './../constants';
 import * as Utils from './../utils';
+import * as vscode from 'vscode';
 
 /** enableProdMode */
 import { enableProdMode } from '@angular/core';
@@ -619,6 +620,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
 			case 'copyAllHeaders':
 				this.dataService.copyResults(undefined, event.batchId, event.resultId, true);
 				break;
+			case 'copyToInsertSql':
+				this.dataService.copyResults(event.selection, event.batchId, event.resultId, true);
+				//转换剪切板上的内容为insert 语句
+				this.convertClipboardToInsertSql();
+				break;
 			default:
 				break;
 		}
@@ -1063,6 +1069,33 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		setTimeout(() => {
 			for (let grid of self.renderedDataSets) {
 				grid.resized.emit();
+			}
+		});
+	}
+
+	async convertClipboardToInsertSql(): Promise<void> {
+		const clipboardContent = await vscode.env.clipboard.readText();
+		let sqlColmunNames = '';
+
+		//遍历剪切板每一行数据
+		clipboardContent.split('\n').forEach((row, index) => {
+			//第一行为列名
+			if (index === 0) {
+				sqlColmunNames = row;
+			} else {
+				//第二行开始为数据
+				let sqlValues = '';
+				row.split('\t').forEach((value, index) => {
+					if (index === 0) {
+						sqlValues = value;
+					} else {
+						sqlValues = sqlValues + ',' + value;
+					}
+				});
+				//拼接insert 语句
+				const sql = `insert into [] (${sqlColmunNames}) values (${sqlValues});`;
+				//写入剪切板
+				vscode.env.clipboard.writeText(sql);
 			}
 		});
 	}
