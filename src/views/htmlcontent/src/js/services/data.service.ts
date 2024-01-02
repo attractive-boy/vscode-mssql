@@ -130,6 +130,10 @@ export class DataService implements OnDestroy {
 		this._proxy.copyResults(batchId, resultId, selection, includeHeaders);
 	}
 
+	copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, includeHeaders?: boolean) {
+		this._proxy.copyToInsertSql(batchId, resultId, selection, includeHeaders);
+	}
+
 	/**
 	 * Sends a request to set the selection in the VScode window
 	 * @param selection The selection range in the VSCode Window

@@ -82,6 +82,10 @@ export class SqlOutputContentProvider {
 		this._queryResultsMap.get(uri).queryRunner.copyResults(selection, batchId, resultId, includeHeaders);
 	}
 
+	public copyToInsertSql(uri: string, batchId: number, resultId: number, selection: Interfaces.ISlickRange[], includeHeaders?: boolean): void {
+		this._queryResultsMap.get(uri).queryRunner.copyToInsertSql(selection, batchId, resultId, includeHeaders);
+	}
+
 	public editorSelectionRequestHandler(uri: string, selection: ISelectionData): void {
 		this._queryResultsMap.get(uri).queryRunner.setEditorSelection(selection);
 	}
@@ -158,6 +162,8 @@ export class SqlOutputContentProvider {
 				this.rowRequestHandler(uri, batchId, resultId, rowStart, numberOfRows),
 			copyResults: (batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean) =>
 				this.copyRequestHandler(uri, batchId, resultsId, selection, includeHeaders),
+			copyToInsertSql: (batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean) =>
+			this.copyToInsertSql(uri, batchId, resultsId, selection, includeHeaders),
 			getConfig: () => this.configRequestHandler(uri),
 			getLocalizedTexts: () => Promise.resolve(LocalizedConstants),
 			openLink: (content: string, columnName: string, linkType: string) => this.openLinkRequestHandler(content, columnName, linkType),

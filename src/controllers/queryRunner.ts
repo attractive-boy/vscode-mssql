@@ -517,6 +517,38 @@ export default class QueryRunner {
 		}
 	}
 
+	public async copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, includeHeaders?: boolean): Promise<void> {
+		await this.copyResults(selection, batchId, resultId, includeHeaders);
+		const clipboardContent = await vscode.env.clipboard.readText();
+		let sqlColmunNames = '';
+		let sql = '';
+		//遍历剪切板每一行数据
+		clipboardContent.split('\n').forEach((line, index) => {
+			//第一行为列名，第二行为数据
+			if (index === 0) {
+				line = line.replace(/[\r\n]/g, '');//去掉换行符
+				sqlColmunNames = line.split('\t').map((value) => {
+					return `[${value}]`;//将列名加上[]
+				}
+				).join(',');
+			} else {
+				//第二行为数据，需要将数据拼接成insert sql
+				let sqlValues = '';
+				line.split('\t').forEach((value, index) => {
+					if (index === 0) {
+						sqlValues = `'${value}'`
+					} else {
+						sqlValues += `,'${value}'`;
+					}
+				});
+				//大写
+				sql += `INSERT INTO [] (${sqlColmunNames}) VALUES(${sqlValues});\n`;
+			}
+		});
+		//将insert sql写入剪切板
+		await vscode.env.clipboard.writeText(sql);
+	}
+
 
 	public async toggleSqlCmd(): Promise<boolean> {
 		const queryExecuteOptions: QueryExecutionOptions = { options: {} };
