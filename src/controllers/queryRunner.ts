@@ -524,7 +524,7 @@ export default class QueryRunner {
 		let sql = '';
 		//遍历剪切板每一行数据
 		clipboardContent.split('\n').forEach((line, index) => {
-			//第一行为列名，第二行为数据
+			//第一行为列名
 			if (index === 0) {
 				line = line.replace(/[\r\n]/g, '');//去掉换行符
 				sqlColmunNames = line.split('\t').map((value) => {
@@ -532,7 +532,7 @@ export default class QueryRunner {
 				}
 				).join(',');
 			} else {
-				//第二行为数据，需要将数据拼接成insert sql
+				//将数据拼接成insert sql
 				let sqlValues = '';
 				line.split('\t').forEach((value, index) => {
 					if (index === 0) {
@@ -546,6 +546,72 @@ export default class QueryRunner {
 			}
 		});
 		//将insert sql写入剪切板
+		await vscode.env.clipboard.writeText(sql);
+	}
+
+
+	public async copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: any[], includeHeaders?: boolean): Promise<void> {
+		await this.copyResults(selection, batchId, resultId, includeHeaders);
+		const clipboardContent = await vscode.env.clipboard.readText();
+		//获取最大的列序号
+		const maxColNumber = datasets[resultId].columnDefinitions.length - 2;
+		//遍历selection，修改fromCell和toCell，使其从0开始到最大列数
+		selection = selection.map((range) => {
+			range.fromCell = 0;
+			range.toCell = maxColNumber;
+			return range;
+		});
+		//将相同的行去除
+		selection = selection.filter((range, index) => {
+			return selection.findIndex((range2) => {
+				return range.fromRow === range2.fromRow;
+			}) === index;
+		});
+		await this.copyResults(selection, batchId, resultId, includeHeaders);
+		const clipboardContent2 = await vscode.env.clipboard.readText();
+		let sqlColmunNames = [];
+		let sql = '';
+		//获取每一行的where条件
+		let whereCondition = [];
+		clipboardContent2.split('\n').forEach((line, index) => {
+			//第一行为列名
+			if (index === 0) {
+				line = line.replace(/[\r\n]/g, '');//去掉换行符
+				sqlColmunNames = line.split('\t');
+			} else {
+				let sqlCondition = '';//where部分
+				line.split('\t').forEach((value, index) => {
+					if (index === 0) {
+						sqlCondition = `${sqlColmunNames[index]}='${value}'`;
+					} else {
+						sqlCondition += ` and ${sqlColmunNames[index]}='${value}'`;
+					}
+				});
+				whereCondition.push(sqlCondition);
+			}
+		});
+		//遍历剪切板每一行数据
+		clipboardContent.split('\n').forEach((line, index) => {
+			//第一行为列名，其他行为数据
+			if (index === 0) {
+				//列名存储到数组中
+				line = line.replace(/[\r\n]/g, '');//去掉换行符
+				sqlColmunNames = line.split('\t');
+			} else {
+				//将数据拼接成update sql
+				let sqlSet = '';//set部分
+				line.split('\t').forEach((value, index) => {
+					if (index === 0) {
+						sqlSet = `${sqlColmunNames[index]}='${value}'`;
+					} else {
+						sqlSet += `,${sqlColmunNames[index]}='${value}'`;
+					}
+				});
+				//大写
+				sql += `UPDATE [] SET ${sqlSet} WHERE ${whereCondition[index - 1]};\n`;
+			}
+		});
+		//update sql写入剪切板
 		await vscode.env.clipboard.writeText(sql);
 	}
 

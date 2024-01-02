@@ -91,7 +91,7 @@ export class DataService implements OnDestroy {
 		telemetryAction: TelemetryActions,
 		additionalProps: { [key: string]: string },
 		additionalMeasurements: { [key: string]: number }
-		): void {
+	): void {
 		this._proxy.sendActionEvent(telemetryView, telemetryAction, additionalProps, additionalMeasurements);
 	}
 
@@ -132,6 +132,10 @@ export class DataService implements OnDestroy {
 
 	copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, includeHeaders?: boolean) {
 		this._proxy.copyToInsertSql(batchId, resultId, selection, includeHeaders);
+	}
+
+	copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: any[], includeHeaders?: boolean) {
+		this._proxy.copyToUpdateSql(batchId, resultId, selection, datasets, includeHeaders);
 	}
 
 	/**

@@ -6,6 +6,7 @@
 import { Event, Disposable } from 'vscode';
 import { ISlickRange, IResultsConfig, ResultSetSubset, ISelectionData } from './models/interfaces';
 import { TelemetryActions, TelemetryViews } from './telemetry/telemetryInterfaces';
+import { IGridDataSet } from './views/htmlcontent/src/js/components/app.component';
 
 export interface IWebviewProxy extends Disposable {
 	sendEvent(type: string, arg: any): void;
@@ -17,6 +18,7 @@ export interface IServerProxy extends Disposable {
 	openLink(content: string, columnName: string, linkType: string): void;
 	copyResults(batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean): void;
 	copyToInsertSql(batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean): void;
+	copyToUpdateSql(batchId: number, resultsId: number, selection: ISlickRange[], datasets: IGridDataSet[], includeHeaders?: boolean): void;
 	getConfig(): Promise<IResultsConfig>;
 	setEditorSelection(selectionData: ISelectionData): void;
 	showWarning(message: string): void;

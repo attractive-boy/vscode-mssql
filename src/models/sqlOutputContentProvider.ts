@@ -86,6 +86,10 @@ export class SqlOutputContentProvider {
 		this._queryResultsMap.get(uri).queryRunner.copyToInsertSql(selection, batchId, resultId, includeHeaders);
 	}
 
+	public copyToUpdateSql(uri: string, batchId: number, resultId: number, selection: Interfaces.ISlickRange[], datasets: any[], includeHeaders?: boolean): void {
+		this._queryResultsMap.get(uri).queryRunner.copyToUpdateSql(selection, batchId, resultId, datasets, includeHeaders);
+	}
+
 	public editorSelectionRequestHandler(uri: string, selection: ISelectionData): void {
 		this._queryResultsMap.get(uri).queryRunner.setEditorSelection(selection);
 	}
@@ -164,6 +168,8 @@ export class SqlOutputContentProvider {
 				this.copyRequestHandler(uri, batchId, resultsId, selection, includeHeaders),
 			copyToInsertSql: (batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean) =>
 			this.copyToInsertSql(uri, batchId, resultsId, selection, includeHeaders),
+			copyToUpdateSql: (batchId: number, resultsId: number, selection: ISlickRange[], datasets: any[], includeHeaders?: boolean) =>
+			this.copyToUpdateSql(uri, batchId, resultsId, selection, datasets, includeHeaders),
 			getConfig: () => this.configRequestHandler(uri),
 			getLocalizedTexts: () => Promise.resolve(LocalizedConstants),
 			openLink: (content: string, columnName: string, linkType: string) => this.openLinkRequestHandler(content, columnName, linkType),

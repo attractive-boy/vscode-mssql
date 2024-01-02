@@ -38,6 +38,8 @@ const template = `
         <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyAllHeaders']}}</span></li>
 		<li id="copyToInsertSql" (click)="handleContextActionClick('copyToInsertSql')"> copy To Insert Sql
         <span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
+		<li id="copyToUpdateSql" (click)="handleContextActionClick('copyToUpdateSql')"> copy To Update Sql
+        <span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
 </ul>
 `;
 
