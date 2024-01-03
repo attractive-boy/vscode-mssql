@@ -620,7 +620,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				this.dataService.copyResults(undefined, event.batchId, event.resultId, true);
 				break;
 			case 'copyToInsertSql':
-				this.dataService.copyToInsertSql(event.selection, event.batchId, event.resultId, true);
+				this.dataService.copyToInsertSql(event.selection, event.batchId, event.resultId, this.dataSets, true);
 				break;
 			case 'copyToUpdateSql':
 				this.dataService.copyToUpdateSql(event.selection, event.batchId, event.resultId, this.dataSets, true);

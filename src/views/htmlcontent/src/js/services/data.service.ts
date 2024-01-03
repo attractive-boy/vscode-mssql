@@ -132,7 +132,7 @@ export class DataService implements OnDestroy {
 	}
 
 	copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: IGridDataSet[], includeHeaders?: boolean) {
-		this._proxy.copyToInsertSql(batchId, resultId, selection, includeHeaders);
+		this._proxy.copyToInsertSql(batchId, resultId, selection, datasets, includeHeaders);
 	}
 
 	copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: IGridDataSet[], includeHeaders?: boolean) {

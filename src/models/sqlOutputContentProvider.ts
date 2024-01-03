@@ -84,7 +84,7 @@ export class SqlOutputContentProvider {
 	}
 
 	public copyToInsertSql(uri: string, batchId: number, resultId: number, selection: Interfaces.ISlickRange[], datasets: IGridDataSet[], includeHeaders?: boolean): void {
-		this._queryResultsMap.get(uri).queryRunner.copyToInsertSql(selection, batchId, resultId, includeHeaders);
+		this._queryResultsMap.get(uri).queryRunner.copyToInsertSql(selection, batchId, resultId, datasets, includeHeaders);
 	}
 
 	public copyToUpdateSql(uri: string, batchId: number, resultId: number, selection: Interfaces.ISlickRange[], datasets: IGridDataSet[], includeHeaders?: boolean): void {
@@ -168,7 +168,7 @@ export class SqlOutputContentProvider {
 			copyResults: (batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean) =>
 				this.copyRequestHandler(uri, batchId, resultsId, selection, includeHeaders),
 			copyToInsertSql: (batchId: number, resultsId: number, selection: ISlickRange[], datasets: IGridDataSet[],includeHeaders?: boolean) =>
-			this.copyToInsertSql(uri, batchId, resultsId, selection, includeHeaders),
+			this.copyToInsertSql(uri, batchId, resultsId, selection, datasets, includeHeaders),
 			copyToUpdateSql: (batchId: number, resultsId: number, selection: ISlickRange[], datasets: IGridDataSet[], includeHeaders?: boolean) =>
 			this.copyToUpdateSql(uri, batchId, resultsId, selection, datasets, includeHeaders),
 			getConfig: () => this.configRequestHandler(uri),
