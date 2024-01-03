@@ -33,6 +33,7 @@ import * as os from 'os';
 import { Deferred } from '../protocol';
 import { sendActionEvent } from '../telemetry/telemetry';
 import { TelemetryActions, TelemetryViews } from '../telemetry/telemetryInterfaces';
+import { IGridDataSet } from '../views/htmlcontent/src/js/components/app.component';
 
 export interface IResultSet {
 	columns: string[];
@@ -517,7 +518,25 @@ export default class QueryRunner {
 		}
 	}
 
-	public async copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, includeHeaders?: boolean): Promise<void> {
+	private getLineSelection(selection: ISlickRange[], dataSets: IGridDataSet[], resultId: number): ISlickRange[] {
+		//获取最大的列序号
+		const maxColNumber = dataSets[resultId].columnDefinitions.length - 2;
+		//遍历selection，修改fromCell和toCell，使其从0开始到最大列数
+		selection = selection.map((range) => {
+			range.fromCell = 0;
+			range.toCell = maxColNumber;
+			return range;
+		});
+		//将相同的行去除
+		return selection.filter((range, index) => {
+			return selection.findIndex((range2) => {
+				return range.fromRow === range2.fromRow;
+			}) === index;
+		});
+	}
+
+	public async copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: IGridDataSet[], includeHeaders?: boolean): Promise<void> {
+		selection = this.getLineSelection(selection, datasets, resultId);
 		await this.copyResults(selection, batchId, resultId, includeHeaders);
 		const clipboardContent = await vscode.env.clipboard.readText();
 		let sqlColmunNames = '';
@@ -536,9 +555,9 @@ export default class QueryRunner {
 				let sqlValues = '';
 				line.split('\t').forEach((value, index) => {
 					if (index === 0) {
-						sqlValues = `'${value}'`
+						sqlValues = value == 'NULL' ? `NULL` : `'${value}'`;
 					} else {
-						sqlValues += `,'${value}'`;
+						sqlValues += value == 'NULL' ? `,NULL` : `,'${value}'`;
 					}
 				});
 				//大写
@@ -550,21 +569,8 @@ export default class QueryRunner {
 	}
 
 
-	public async copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: any[], includeHeaders?: boolean): Promise<void> {
-		//获取最大的列序号
-		const maxColNumber = datasets[resultId].columnDefinitions.length - 2;
-		//遍历selection，修改fromCell和toCell，使其从0开始到最大列数
-		selection = selection.map((range) => {
-			range.fromCell = 0;
-			range.toCell = maxColNumber;
-			return range;
-		});
-		//将相同的行去除
-		selection = selection.filter((range, index) => {
-			return selection.findIndex((range2) => {
-				return range.fromRow === range2.fromRow;
-			}) === index;
-		});
+	public async copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: IGridDataSet[], includeHeaders?: boolean): Promise<void> {
+		selection = this.getLineSelection(selection, datasets, resultId);
 		await this.copyResults(selection, batchId, resultId, includeHeaders);
 		const clipboardContent = await vscode.env.clipboard.readText();
 		let sqlColmunNames = [];
@@ -579,11 +585,11 @@ export default class QueryRunner {
 				let sqlSet = '';//set部分
 				line.split('\t').forEach((value, index) => {
 					if (index === 0) {
-						sqlCondition = `${sqlColmunNames[index]}='${value}'`;
-						sqlSet = `${sqlColmunNames[index]}='${value}'`;
+						sqlCondition = value == 'NULL' ? `${sqlColmunNames[index]} IS NULL` : `${sqlColmunNames[index]}='${value}'`;
+						sqlSet = value == 'NULL' ? `${sqlColmunNames[index]}=NULL` : `${sqlColmunNames[index]}='${value}'`;
 					} else {
-						sqlCondition += ` and ${sqlColmunNames[index]}='${value}'`;
-						sqlSet += `,${sqlColmunNames[index]}='${value}'`;
+						sqlCondition += value == 'NULL' ? ` AND ${sqlColmunNames[index]} IS NULL` : ` AND ${sqlColmunNames[index]}='${value}'`;
+						sqlSet += value == 'NULL' ? `,${sqlColmunNames[index]}=NULL` : `,${sqlColmunNames[index]}='${value}'`;
 					}
 				});
 				sql += `UPDATE [] SET ${sqlSet} WHERE ${sqlCondition};\n`;

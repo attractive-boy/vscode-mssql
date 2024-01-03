@@ -17,7 +17,7 @@ export interface IServerProxy extends Disposable {
 	saveResults(batchId: number, resultId: number, format: string, selection: ISlickRange[]): void;
 	openLink(content: string, columnName: string, linkType: string): void;
 	copyResults(batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean): void;
-	copyToInsertSql(batchId: number, resultsId: number, selection: ISlickRange[], includeHeaders?: boolean): void;
+	copyToInsertSql(batchId: number, resultsId: number, selection: ISlickRange[], datasets: IGridDataSet[], includeHeaders?: boolean): void;
 	copyToUpdateSql(batchId: number, resultsId: number, selection: ISlickRange[], datasets: IGridDataSet[], includeHeaders?: boolean): void;
 	getConfig(): Promise<IResultsConfig>;
 	setEditorSelection(selectionData: ISelectionData): void;

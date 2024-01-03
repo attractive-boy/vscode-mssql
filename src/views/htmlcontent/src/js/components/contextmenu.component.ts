@@ -19,29 +19,37 @@ export interface IContextMenuClickEventArgs {
 /**
  * The component that acts as the contextMenu for slick grid
  */
+/*
+const template = `
+<ul class="contextMenu" style="position:absolute" [class.hidden]="!visible" [style.top.px]="position.y" [style.left.px]="position.x">
+	<li id="savecsv" (click)="handleContextActionClick('savecsv')" [class.disabled]="isDisabled"> {{Constants.saveCSVLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.saveAsCSV']}}</span></li>
+	<li id="savejson" (click)="handleContextActionClick('savejson')" [class.disabled]="isDisabled"> {{Constants.saveJSONLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.saveAsJSON']}}</span></li>
+	<li id="saveexcel" (click)="handleContextActionClick('saveexcel')" [class.disabled]="isDisabled"> {{Constants.saveExcelLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.saveAsExcel']}}</span></li>
+	<li id="selectall" (click)="handleContextActionClick('selectall')" [class.disabled]="isDisabled"> {{Constants.selectAll}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.selectAll']}}</span></li>
+	<li id="copy" (click)="handleContextActionClick('copySelection')" [class.disabled]="isDisabled"> {{Constants.copyLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copySelection']}}</span></li>
+	<li id="copyWithHeaders" (click)="handleContextActionClick('copyWithHeaders')" [class.disabled]="isDisabled"> {{Constants.copyWithHeadersLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyWithHeaders']}}</span></li>
+	<li id="copyAllHeaders" (click)="handleContextActionClick('copyAllHeaders')" [class.disabled]="isDisabled"> {{Constants.copyAllHeadersLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyAllHeaders']}}</span></li>
+</ul>
+`;
+*/
 
 const template = `
 <ul class="contextMenu" style="position:absolute" [class.hidden]="!visible" [style.top.px]="position.y" [style.left.px]="position.x">
-    <li id="savecsv" (click)="handleContextActionClick('savecsv')" [class.disabled]="isDisabled"> {{Constants.saveCSVLabel}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.saveAsCSV']}}</span></li>
-    <li id="savejson" (click)="handleContextActionClick('savejson')" [class.disabled]="isDisabled"> {{Constants.saveJSONLabel}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.saveAsJSON']}}</span></li>
-    <li id="saveexcel" (click)="handleContextActionClick('saveexcel')" [class.disabled]="isDisabled"> {{Constants.saveExcelLabel}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.saveAsExcel']}}</span></li>
-    <li id="selectall" (click)="handleContextActionClick('selectall')" [class.disabled]="isDisabled"> {{Constants.selectAll}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.selectAll']}}</span></li>
-    <li id="copy" (click)="handleContextActionClick('copySelection')" [class.disabled]="isDisabled"> {{Constants.copyLabel}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copySelection']}}</span></li>
-    <li id="copyWithHeaders" (click)="handleContextActionClick('copyWithHeaders')" [class.disabled]="isDisabled"> {{Constants.copyWithHeadersLabel}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyWithHeaders']}}</span></li>
-    <li id="copyAllHeaders" (click)="handleContextActionClick('copyAllHeaders')" [class.disabled]="isDisabled"> {{Constants.copyAllHeadersLabel}}
-        <span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyAllHeaders']}}</span></li>
-		<li id="copyToInsertSql" (click)="handleContextActionClick('copyToInsertSql')"> copy To Insert Sql
-        <span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
-		<li id="copyToUpdateSql" (click)="handleContextActionClick('copyToUpdateSql')"> copy To Update Sql
-        <span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
+	<li id="copyWithHeaders" (click)="handleContextActionClick('copyWithHeaders')" [class.disabled]="isDisabled"> {{Constants.copyWithHeadersLabel}}
+		<span style="float: right; color: lightgrey; padding-left: 10px">{{keys['event.copyWithHeaders']}}</span></li>
+	<li id="copyToInsertSql" (click)="handleContextActionClick('copyToInsertSql')"> Copy To Insert Sql
+		<span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
+	<li id="copyToUpdateSql" (click)="handleContextActionClick('copyToUpdateSql')"> Copy To Update Sql
+		<span style="float: right; color: lightgrey; padding-left: 10px"></span></li>
 </ul>
-`;
+`
 
 @Component({
 	selector: 'context-menu',

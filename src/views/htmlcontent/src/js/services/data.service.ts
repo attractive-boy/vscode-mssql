@@ -9,6 +9,7 @@ import { QueryEvent, ResultSetSubset, ISelectionData } from './../../../../../mo
 import * as Constants from './../constants';
 import { createProxy, IMessageProtocol, IServerProxy } from '../../../../../protocol';
 import { TelemetryActions, TelemetryViews } from '../../../../../telemetry/telemetryInterfaces';
+import { IGridDataSet } from '../components/app.component';
 
 declare function acquireVsCodeApi(): { postMessage: (message: string) => void; };
 
@@ -130,11 +131,11 @@ export class DataService implements OnDestroy {
 		this._proxy.copyResults(batchId, resultId, selection, includeHeaders);
 	}
 
-	copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, includeHeaders?: boolean) {
+	copyToInsertSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: IGridDataSet[], includeHeaders?: boolean) {
 		this._proxy.copyToInsertSql(batchId, resultId, selection, includeHeaders);
 	}
 
-	copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: any[], includeHeaders?: boolean) {
+	copyToUpdateSql(selection: ISlickRange[], batchId: number, resultId: number, datasets: IGridDataSet[], includeHeaders?: boolean) {
 		this._proxy.copyToUpdateSql(batchId, resultId, selection, datasets, includeHeaders);
 	}
 
